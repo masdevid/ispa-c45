@@ -1,0 +1,6 @@
+<li class="nav-item" *ngFor="let m of menus">
+  <a class="nav-link" [routerLink]="'/'+m.url" [routerLinkActive]="'active'">
+    <span data-feather="home"></span>
+    {{m.label}}
+  </a>
+</li>

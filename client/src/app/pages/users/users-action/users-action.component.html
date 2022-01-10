@@ -1,0 +1,45 @@
+<app-header></app-header>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <app-sidebar></app-sidebar>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 p-md-4">
+      <div class="row justify-content-center">
+
+        <div class="col-md-10 col-lg-8 col-xl-6">
+          <div class="card mt-5">
+            <div class="card-body">
+              <form class="row g-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+                <div class="col-12 mb-3">
+                  <label for="username">Username</label>
+                  <input type="text" formControlName="username" class="form-control" id="username" required>
+                </div>
+                <div class="col-12 mb-3">
+                  <label for="password">Password</label>
+                  <input type="password" formControlName="password" class="form-control" id="password" required>
+                </div>
+
+                <div class="col-12 d-flex align-items-center justify-content-end">
+                  <button class="btn btn-light mr-2" type="button" (click)="onBack()">
+                    Back
+                  </button>
+                  <button class="btn btn-warning" type="submit">
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>

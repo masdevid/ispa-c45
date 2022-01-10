@@ -1,0 +1,137 @@
+<app-header></app-header>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <app-sidebar></app-sidebar>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 p-md-4">
+      <div class="row justify-content-center">
+
+        <div class="col-md-10 col-lg-8 col-xl-6">
+          <div class="card mt-5">
+            <div class="card-body">
+              <form class="" [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="nama">Nama Pasien</label>
+                    <input type="text" class="form-control" placeholder="Nama Pasien" id="nama" formControlName="nama">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label>Jenis Kelamin</label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" formControlName="jenis_kelamin" name="jenis_kelamin" id="jenis_kelamin_l" [value]="'L'">
+                      <label class="form-check-label" for="jenis_kelamin_l">
+                        Laki-laki
+                      </label>
+                    </div>
+                    <div class="form-check mb-3">
+                      <input class="form-check-input" type="radio" formControlName="jenis_kelamin" name="jenis_kelamin" id="jenis_kelamin_p" [value]="'P'" checked>
+                      <label class="form-check-label" for="jenis_kelamin_p">
+                        Perempuan
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-12 mb-3">
+                    <label for="alamat">Alamat</label>
+                    <textarea rows="2" class="form-control" formControlName="alamat" id="alamat"></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <label>Umur</label>
+                    <input type="number" class="form-control" placeholder="Umur" name="umur" formControlName="umur">
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label>Satuan Umur</label>
+                    <ng-select [items]="satuanUsia" bindValue="value" bindLabel="name" formControlName="satuan_umur"></ng-select>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <label>Kategori Umur</label>
+                    <ng-select formControlName="kategori_usia" [items]="kategoriUsia" bindValue="id">
+                      <ng-template ng-label-tmp let-item="item">
+                        <b>{{item.kategori}}</b> ({{item.min}} s.d {{item.max}} {{item.satuan}})
+                      </ng-template>
+                      <ng-template ng-option-tmp let-item="item">
+                        <b>{{item.kategori}}</b> ({{item.min}} s.d {{item.max}} {{item.satuan}})
+                      </ng-template>
+                    </ng-select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label>Suhu Tubuh</label>
+                    <input type="number" class="form-control" formControlName="suhu" placeholder="Suhu Tubuh">
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label>Sesak Nafas</label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="is_sesak" formControlName="is_sesak" [value]="true" id="sesak_nafas_true">
+                      <label class="form-check-label" for="sesak_nafas_true">
+                        Ya
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="is_sesak" formControlName="is_sesak" [value]="false" id="sesak_nafas_false" checked>
+                      <label class="form-check-label" for="sesak_nafas_false">
+                        Tidak
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label>Batuk</label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="is_batuk" formControlName="is_batuk" id="batuk_y" [value]="true">
+                      <label class="form-check-label" for="batuk_y">
+                        Ya
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="is_batuk" formControlName="is_batuk" id="batuk_t" [value]="false" checked>
+                      <label class="form-check-label" for="batuk_t">
+                        Tidak
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label>Diagnosa</label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="result" formControlName="result" id="result_y" [value]="true">
+                      <label class="form-check-label" for="result_y">
+                        Ya
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="result" formControlName="result" id="result_t" [value]="false" checked>
+                      <label class="form-check-label" for="result_t">
+                        Tidak
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-12 d-flex align-items-center justify-content-end">
+                  <button class="btn btn-light mr-2" type="button" (click)="onBack()">
+                    Back
+                  </button>
+                  <button class="btn btn-warning" type="submit" [disabled]="form.invalid || isLoading">
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>

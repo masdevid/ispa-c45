@@ -1,0 +1,52 @@
+<app-header></app-header>
+
+<div class="container-fluid">
+  <div class="row">
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+      <div class="position-sticky pt-3">
+        <ul class="nav flex-column">
+          <app-sidebar></app-sidebar>
+        </ul>
+      </div>
+    </nav>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 p-md-4">
+      <div class="row justify-content-center">
+
+        <div class="col-md-10 col-lg-8 col-xl-6">
+          <div class="card mt-5">
+            <div class="card-body">
+              <form class="row g-3" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+                <div class="col-md-12 mb-3">
+                  <label for="kategori">Kategori</label>
+                  <input type="text" formControlName="kategori" class="form-control" id="kategori" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="min">Min</label>
+                  <input type="number" formControlName="min" class="form-control" id="min" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="max">Max</label>
+                  <input type="number" formControlName="max" class="form-control" id="max" required>
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label for="satuan">Satuan</label>
+                  <ng-select bindLabel="name" bindValue="value" formControlName="satuan" [items]="satuanUsia"></ng-select>
+                </div>
+                <div class="col-md-12 d-flex align-items-center justify-content-end">
+                  <button class="btn btn-light mr-2" type="button" (click)="onBack()">
+                    Back
+                  </button>
+                  <button class="btn btn-warning" type="submit" [disabled]="form.invalid || isLoading">
+                    Save
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>

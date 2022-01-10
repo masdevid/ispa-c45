@@ -1,0 +1,21 @@
+<div mat-dialog-title align="center">
+  <h2> Confirmation Dialog </h2>
+</div>
+<div mat-dialog-content align="center">
+  <p class="mb-0" *ngIf="data">
+    <ng-container *ngIf="data.message">
+      Are you sure about to delete <span class="text-danger fw-bold">{{data.message}}</span> ?
+    </ng-container>
+    <ng-container *ngIf="data.selected">
+      Are you sure about to delete <span class="text-danger fw-bold">{{data.selected}}</span> selected rows?
+    </ng-container>
+  </p>
+  <p class="mb-0" *ngIf="!data">
+    Are you sure about to sign out?
+  </p>
+</div>
+
+<mat-dialog-actions align="center">
+    <button class="btn btn-outline-secondary mr-3" (click)="dialog.close(false)">Cancel</button>
+    <button class="btn btn-warning" (click)="dialog.close(true)">Yes</button>
+</mat-dialog-actions>
