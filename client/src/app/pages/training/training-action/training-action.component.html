@@ -38,6 +38,19 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="row">
+
+                  <div class="col-md-6 mb-3">
+                    <label>Tahun</label>
+                    <input type="year" formControlName="tahun" class="form-control" id='tahun'>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label>Bulan</label>
+                    <ng-select formControlName="bulan" [items]="bulan" bindValue="id" bindLabel="name" id="bulan">
+                    </ng-select>
+                  </div>
+                </div>
                 <div class="row">
                   <div class="col-md-12 mb-3">
                     <label for="alamat">Alamat</label>

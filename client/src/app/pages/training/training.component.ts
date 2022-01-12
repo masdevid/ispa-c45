@@ -24,7 +24,7 @@ export class TrainingComponent extends BasePage<Pasien> implements OnInit, After
     this.sortActive       = 'nama';
     this.sortDirection    = 'asc';
     this.subject          = 'nama';
-    const selectedFields  = 'nama,alamat,jenis_kelamin,umur,satuan_umur,suhu,is_sesak,is_batuk,result';
+    const selectedFields  = 'tahun,bulan,nama,alamat,jenis_kelamin,umur,satuan_umur,suhu,is_sesak,is_batuk,result';
     this.displayedColumns = ['select', 'no', ...selectedFields.split(',').filter(f => f != 'id'), 'actions'];
     this.q.limit = 10;
     this.q.filter = { is_data_training: 1}

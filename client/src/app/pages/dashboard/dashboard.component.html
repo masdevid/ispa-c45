@@ -32,114 +32,146 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12 mt-5 pt-5" style="border-top: 1pt solid #f1f1f1">
-            <div class="p-2 d-flex justify-content-between align-items-center border-bottom border-warning border-2 mb-3">
+          <div class="col-md-6">
+            <div class="col-md-12 mt-5 border-bottom mb-3 border-warning border-2 py-2">
               <strong>Diagnosa ISPA</strong>
             </div>
+            <form class="" [formGroup]="form" (ngSubmit)="predict()">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="nama">Nama Pasien</label>
+                  <input type="text" class="form-control" placeholder="Nama Pasien" id="nama" formControlName="nama">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label>Jenis Kelamin</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" formControlName="jenis_kelamin" name="jenis_kelamin" id="jenis_kelamin_l" [value]="'L'">
+                    <label class="form-check-label" for="jenis_kelamin_l">
+                      Laki-laki
+                    </label>
+                  </div>
+                  <div class="form-check mb-3">
+                    <input class="form-check-input" type="radio" formControlName="jenis_kelamin" name="jenis_kelamin" id="jenis_kelamin_p" [value]="'P'" checked>
+                    <label class="form-check-label" for="jenis_kelamin_p">
+                      Perempuan
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label for="alamat">Alamat</label>
+                  <textarea rows="2" class="form-control" formControlName="alamat" id="alamat"></textarea>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label>Tahun</label>
+                  <input type="year" formControlName="tahun" class="form-control" id='tahun'>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label>Bulan</label>
+                  <ng-select formControlName="bulan" [items]="bulan" bindValue="id" bindLabel="name" id="bulan">
+                  </ng-select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label>Umur</label>
+                  <input type="number" class="form-control" placeholder="Umur" name="umur" formControlName="umur">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label>Satuan Umur</label>
+                  <ng-select [items]="satuanUsia" bindValue="value" bindLabel="name" formControlName="satuan_umur"></ng-select>
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label>Kategori Umur</label>
+                  <ng-select formControlName="kategori_usia" [items]="kategoriUsia" bindValue="id">
+                    <ng-template ng-label-tmp let-item="item">
+                      <b>{{item.kategori}}</b> ({{item.min}} s.d {{item.max}} {{item.satuan}})
+                    </ng-template>
+                    <ng-template ng-option-tmp let-item="item">
+                      <b>{{item.kategori}}</b> ({{item.min}} s.d {{item.max}} {{item.satuan}})
+                    </ng-template>
+                  </ng-select>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label>Suhu Tubuh</label>
+                  <input type="number" class="form-control" formControlName="suhu" placeholder="Suhu Tubuh">
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label>Sesak Nafas</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="is_sesak" formControlName="is_sesak" [value]="true" id="sesak_nafas_true">
+                    <label class="form-check-label" for="sesak_nafas_true">
+                      Ya
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="is_sesak" formControlName="is_sesak" [value]="false" id="sesak_nafas_false" checked>
+                    <label class="form-check-label" for="sesak_nafas_false">
+                      Tidak
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                  <label>Batuk</label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="is_batuk" formControlName="is_batuk" id="batuk_y" [value]="true">
+                    <label class="form-check-label" for="batuk_y">
+                      Ya
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio" name="is_batuk" formControlName="is_batuk" id="batuk_t" [value]="false" checked>
+                    <label class="form-check-label" for="batuk_t">
+                      Tidak
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-md-12 d-flex align-items-center justify-content-end">
+                <button class="btn btn-warning" type="submit" [disabled]="form.invalid || isLoading">
+                  Mulai Diagnosa
+                </button>
+              </div>
+              <h3>Hasil Diagnosa</h3>
+              <div class="mt-2 alert" [ngClass]="{'alert-success':result.predict == 0,'alert-danger':result.predict == 1}" *ngIf="result">
+                <strong>{{ form.get('nama')?.value | uppercase }} </strong> <span *ngIf="result.predict==0">TIDAK</span> TERDIAGNOSIS ISPA (accuracy: {{result.accuracy}})
+              </div>
+            </form>
+
           </div>
-        </div>
-        <div class="row">
           <div class="col-md-6">
-             <form class="" [formGroup]="form" (ngSubmit)="predict()">
-                <div class="row">
-                  <div class="col-md-6 mb-3">
-                    <label for="nama">Nama Pasien</label>
-                    <input type="text" class="form-control" placeholder="Nama Pasien" id="nama" formControlName="nama">
-                  </div>
-                  <div class="col-md-6 mb-3">
-                    <label>Jenis Kelamin</label>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" formControlName="jenis_kelamin" name="jenis_kelamin" id="jenis_kelamin_l" [value]="'L'">
-                      <label class="form-check-label" for="jenis_kelamin_l">
-                        Laki-laki
-                      </label>
-                    </div>
-                    <div class="form-check mb-3">
-                      <input class="form-check-input" type="radio" formControlName="jenis_kelamin" name="jenis_kelamin" id="jenis_kelamin_p" [value]="'P'" checked>
-                      <label class="form-check-label" for="jenis_kelamin_p">
-                        Perempuan
-                      </label>
-                    </div>
-                  </div>
+            <div class="col-md-12 mt-5 border-bottom mb-3 border-warning border-2 py-2">
+              <strong>Prediksi Trend Penyakit ISPA</strong>
+            </div>
+            <form class="" [formGroup]="formTrend" (ngSubmit)="prediksiTrend()">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label>Tahun</label>
+                  <input type="year" formControlName="tahun" class="form-control" id='tahun'>
                 </div>
-                <div class="row">
-                  <div class="col-md-12 mb-3">
-                    <label for="alamat">Alamat</label>
-                    <textarea rows="2" class="form-control" formControlName="alamat" id="alamat"></textarea>
-                  </div>
+                <div class="col-md-4 mb-3">
+                  <label>Bulan</label>
+                  <ng-select formControlName="bulan" [items]="bulan" bindValue="id" bindLabel="name" id="bulan">
+                  </ng-select>
                 </div>
-                <div class="row">
-                  <div class="col-md-4 mb-3">
-                    <label>Umur</label>
-                    <input type="number" class="form-control" placeholder="Umur" name="umur" formControlName="umur">
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <label>Satuan Umur</label>
-                    <ng-select [items]="satuanUsia" bindValue="value" bindLabel="name" formControlName="satuan_umur"></ng-select>
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <label>Kategori Umur</label>
-                    <ng-select formControlName="kategori_usia" [items]="kategoriUsia" bindValue="id">
-                      <ng-template ng-label-tmp let-item="item">
-                        <b>{{item.kategori}}</b> ({{item.min}} s.d {{item.max}} {{item.satuan}})
-                      </ng-template>
-                      <ng-template ng-option-tmp let-item="item">
-                        <b>{{item.kategori}}</b> ({{item.min}} s.d {{item.max}} {{item.satuan}})
-                      </ng-template>
-                    </ng-select>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4 mb-3">
-                    <label>Suhu Tubuh</label>
-                    <input type="number" class="form-control" formControlName="suhu" placeholder="Suhu Tubuh">
-                  </div>
-                  <div class="col-md-4 mb-3">
-                    <label>Sesak Nafas</label>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="is_sesak" formControlName="is_sesak" [value]="true" id="sesak_nafas_true">
-                      <label class="form-check-label" for="sesak_nafas_true">
-                        Ya
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="is_sesak" formControlName="is_sesak" [value]="false" id="sesak_nafas_false" checked>
-                      <label class="form-check-label" for="sesak_nafas_false">
-                        Tidak
-                      </label>
-                    </div>
-                  </div>
-
-                  <div class="col-md-4 mb-3">
-                    <label>Batuk</label>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="is_batuk" formControlName="is_batuk" id="batuk_y" [value]="true">
-                      <label class="form-check-label" for="batuk_y">
-                        Ya
-                      </label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="is_batuk" formControlName="is_batuk" id="batuk_t" [value]="false" checked>
-                      <label class="form-check-label" for="batuk_t">
-                        Tidak
-                      </label>
-                    </div>
-                  </div>
-
-                </div>
-                <div class="col-md-12 d-flex align-items-center justify-content-end">
-                  <button class="btn btn-warning" type="submit" [disabled]="form.invalid || isLoading">
-                    Mulai Diagnosa
+                <div class="col-md-4 d-flex align-items-center justify-content-end">
+                  <button class="btn btn-warning" type="submit" [disabled]="isLoading">
+                    Mulai Prediksi
                   </button>
                 </div>
-              </form>
-
-          </div>
-          <div class="col-md-6">
-            <h3>Hasil Diagnosa</h3>
-            <div class="mt-2 alert" [ngClass]="{'alert-success':result.predict == 0,'alert-danger':result.predict == 1}" *ngIf="result">
-              {{ form.get('nama')?.value | uppercase }} <span *ngIf="result.predict==0">TIDAK</span> TERDIAGNOSIS ISPA (accuracy: {{result.accuracy}})
+              </div>
+            </form>
+            <div class="mt-2 alert" [ngClass]="{'alert-success':trendResult.predict == 0,'alert-danger':trendResult.predict == 1}" *ngIf="trendResult">
+              TREND PENYAKIT ISPA <span *ngIf="trendResult.predict==0">TURUN</span><span *ngIf="trendResult.predict==1">NAIK</span> (accuracy: {{trendResult.accuracy}})
             </div>
+
           </div>
         </div>
 

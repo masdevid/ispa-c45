@@ -22,7 +22,7 @@ export class TestingComponent extends BasePage<Pasien> implements OnInit, AfterV
     this.sortActive       = 'id';
     this.sortDirection    = 'desc';
     this.subject          = 'nama';
-    const selectedFields  = 'nama,alamat,jenis_kelamin,umur,satuan_umur,suhu,is_sesak,is_batuk,result';
+    const selectedFields  = 'tahun,bulan,nama,alamat,jenis_kelamin,umur,satuan_umur,suhu,is_sesak,is_batuk,result';
     this.displayedColumns = ['select', 'no', ...selectedFields.split(',').filter(f => f != 'id'), 'actions'];
     this.q.filter = { is_data_training: 0}
   }
@@ -35,5 +35,10 @@ export class TestingComponent extends BasePage<Pasien> implements OnInit, AfterV
   }
   ngAfterViewInit(): void {
     super.ngAfterViewInit()
+  }
+  setTrain(id){
+    this.service.setTrain(id).subscribe(() => {
+      this.getData()
+    })
   }
 }

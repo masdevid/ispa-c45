@@ -12,5 +12,8 @@ export class PasienService extends BaseCrudService<Pasien>{
     super(http)
     this.endpoint = 'pasien'
   }
-
+  setTrain(id){
+    const url = [this.baseUrl, this.endpoint,'set-train', id].join('/')
+    return this.http.put<Pasien>(url, {})
+  }
 }

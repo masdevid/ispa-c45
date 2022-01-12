@@ -7,7 +7,9 @@ from sklearn.model_selection import train_test_split
 
 from datetime import datetime
 
-features = ['suhu', 'is_batuk', 'is_sesak', 'kategori_usia']
+features = ['suhu', 'is_batuk', 'is_sesak']
+def parseSuhu(suhu):
+    return 0 if (suhu < 36) else 1 if (suhu >= 36 and suhu <=37.5) else 2 if (suhu > 37.5 and suhu < 39) else 3
 
 @app.route('/predict',methods=["POST"])
 def predict():
@@ -23,26 +25,29 @@ def predict():
     is_sesak = body['is_sesak']
     is_data_training = body['is_data_training']
     kategori_usia = body['kategori_usia']
-
+    tahun = body['tahun']
+    bulan = body['bulan']
+    
     data = []
     target = []
     pasien = Pasien.query.filter_by(is_data_training=True).all()
     for p in pasien:
-        data.append([p.suhu, p.is_batuk,p.is_sesak,p.kategori_usia])
-        target.append(p.result)
-        
+        x = [parseSuhu(p.suhu), 1 if p.is_batuk else 0, 1 if p.is_sesak else 0]
+        y = 1 if p.result else 0
+        data.append(x)
+        target.append(y)
     clf = C45(attrNames=features)
 
     X_train, X_test, y_train, y_test = train_test_split(np.array(data), target, test_size=0.5)
     clf.fit(X_train, y_train)
     C45(attrNames=features)
     acc = clf.score(X_test, y_test)
-    predict_test = [[suhu, is_batuk, is_sesak, kategori_usia]]
+    predict_test = [[parseSuhu(suhu), 1 if is_batuk else 0, 1 if is_sesak else 0]]
 
    
     predict = clf.predict(np.array(predict_test))
 
-    test_result = Pasien(None, nama, alamat,  umur, jenis_kelamin, satuan_umur, kategori_usia, is_batuk, is_sesak, is_data_training, suhu,  bool(predict[0]))
+    test_result = Pasien(None, nama, alamat,  umur, jenis_kelamin, satuan_umur, kategori_usia, is_batuk, is_sesak, is_data_training, suhu,  bool(predict[0]), tahun, bulan)
     Pasien.query.session.add(test_result)
     Pasien.query.session.commit()
 
@@ -59,8 +64,8 @@ def retrain():
     target = []
     pasien = Pasien.query.filter_by(is_data_training=True).all()
     for p in pasien:
-        data.append([p.suhu, p.is_batuk,p.is_sesak,p.kategori_usia])
-        target.append(p.result)
+        data.append([parseSuhu(p.suhu),  1 if p.is_batuk else 0, 1 if p.is_sesak else 0])
+        target.append(1 if p.result else 0)
         
     clf = C45(attrNames=features)
 
@@ -72,3 +77,30 @@ def retrain():
     Train.query.session.add(train_log)
     Train.query.session.commit()
     return jsonify({"accuracy": acc}),200
+
+
+@app.route('/trend',methods=["POST"])
+def trend():
+    body = request.get_json()
+    bulan = body['bulan']
+    tahun = body['tahun']
+    data = []
+    target = []
+    pasien = Pasien.query.filter(Pasien.is_data_training ==True, Pasien.tahun == tahun, Pasien.bulan <= bulan).all()
+    if len(pasien) < 10:
+        return jsonify({ 'message': f'Data training kurang dari 10'}), 404
+    for p in pasien:
+        t = 1 if p.result else 0
+        d = [p.tahun, p.bulan]
+        data.append(d)
+        target.append(t)
+
+    clf = C45(attrNames=['year','month'])
+
+    X_train, X_test, y_train, y_test = train_test_split(np.array(data), target, test_size=0.5)
+    clf.fit(X_train, y_train)
+    C45(attrNames=['year','month'])
+    acc = clf.score(X_test, y_test)
+    predict = clf.predict([[int(tahun),int(bulan)]])
+    print(acc, predict)
+    return jsonify({"accuracy": acc,"predict": int(predict[0])}),200

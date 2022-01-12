@@ -67,11 +67,13 @@ class Pasien(db.Model):
     is_batuk = db.Column(db.Boolean())
     is_sesak = db.Column(db.Boolean())
     is_data_training = db.Column(db.Boolean())
+    tahun = db.Column(db.Integer())
+    bulan = db.Column(db.Integer())
     result = db.Column(db.Boolean())
     
     kategori_usia = db.Column(db.Integer(), db.ForeignKey('kategori_usia.id'))
     kategori_usia_rel = db.relationship('KategoriUsia', backref='Pasien')
-    def __init__(self, id, nama, alamat, umur, jenis_kelamin, satuan_umur, kategori_usia, is_batuk, is_sesak, is_data_training, suhu, result):
+    def __init__(self, id, nama, alamat, umur, jenis_kelamin, satuan_umur, kategori_usia, is_batuk, is_sesak, is_data_training, suhu, result, tahun, bulan):
         self.id = id
         self.nama = nama
         self.alamat = alamat
@@ -84,6 +86,8 @@ class Pasien(db.Model):
         self.is_data_training = is_data_training
         self.suhu = suhu
         self.result = result
+        self.tahun = tahun
+        self.bulan = bulan
             
 class PasienSchema(Schema):
     id = fields.Number()
@@ -99,6 +103,8 @@ class PasienSchema(Schema):
     suhu = fields.Number()
     kategori_usia = fields.Number()
     kategori_usia_rel = fields.Nested(KategoriUsiaSchema)
+    tahun = fields.Number()
+    bulan = fields.Number()
 
 class Test(db.Model):   
     id = db.Column(db.Integer(), primary_key=True)

@@ -16,4 +16,8 @@ export class TestingService  extends BaseCrudService<Testing>{
     const url = [this.baseUrl, 'predict'].join('/')
     return this.http.post<any>(url, data);
   }
+  predictTrend(data){
+    const url = [this.baseUrl, 'trend'].join('/')
+    return this.http.post<any>(url, data);
+  }
 }

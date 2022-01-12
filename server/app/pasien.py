@@ -41,6 +41,22 @@ def pasienCount():
     data = Pasien.query.filter_by(is_data_training=filters['is_data_training']).count()
     return jsonify({'count': data}),200
 
+
+@app.route('/pasien/set-train/<id>',methods=["PUT"])
+def pasienSetTrainById(id):    
+   
+    found = Pasien.query.filter_by(id=id)
+    if not found.first():
+        return jsonify({ 'message': f'pasien with id {id} not found'}), 404
+    
+    is_data_training = True
+    Pasien.query.filter_by(id=id).update(dict(is_data_training = is_data_training))
+    Pasien.query.session.commit()
+    
+    schema = PasienSchema(many=False)  
+    pasien = schema.dump(found.first())
+    return jsonify(pasien),200
+
 @app.route('/pasien/<id>',methods=["PUT"])
 def pasienUpdateById(id):    
    
@@ -60,12 +76,16 @@ def pasienUpdateById(id):
     is_data_training = body['is_data_training']
     kategori_usia = body['kategori_usia']
     result = body['result']
-    Pasien.query.filter_by(id=id).update(dict(nama=nama, alamat=alamat, umur=umur, jenis_kelamin=jenis_kelamin, satuan_umur=satuan_umur, kategori_usia=kategori_usia, is_batuk=is_batuk, is_sesak=is_sesak, is_data_training=is_data_training, suhu=suhu, result=result))
+    tahun = body['tahun']
+    bulan = body['bulan']
+    Pasien.query.filter_by(id=id).update(dict(nama=nama, alamat=alamat, umur=umur, jenis_kelamin=jenis_kelamin, satuan_umur=satuan_umur, kategori_usia=kategori_usia, is_batuk=is_batuk, is_sesak=is_sesak, is_data_training=is_data_training, suhu=suhu, result=result, tahun=tahun, bulan=bulan))
     Pasien.query.session.commit()
     
     schema = PasienSchema(many=False)  
     pasien = schema.dump(found.first())
     return jsonify(pasien),200
+
+
 
 @app.route('/pasien',methods=["POST"])
 def pasienCreate():
@@ -82,7 +102,9 @@ def pasienCreate():
     is_data_training = body['is_data_training']
     kategori_usia = body['kategori_usia']
     result = body['result']
-    row = Pasien(None, nama, alamat,  umur, jenis_kelamin, satuan_umur, kategori_usia, is_batuk, is_sesak, is_data_training, suhu,  result)
+    tahun = body['tahun']
+    bulan = body['bulan']
+    row = Pasien(None, nama, alamat,  umur, jenis_kelamin, satuan_umur, kategori_usia, is_batuk, is_sesak, is_data_training, suhu,  result, tahun, bulan)
     Pasien.query.session.add(row)
     Pasien.query.session.commit()
 

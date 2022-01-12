@@ -5,6 +5,7 @@ export interface Pasien {
   nama?: string;
   alamat?: string;
   umur?: number;
+  satuan_umur: string;
   kategori_usia?: number;
   suhu?: number;
   is_batuk?: boolean;
@@ -12,4 +13,6 @@ export interface Pasien {
   is_data_training?: boolean;
   kategori_usia_rel?: KategoriUsia;
   result?: string;
+  tahun?: number;
+  bulan?: number;
 }

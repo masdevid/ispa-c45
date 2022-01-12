@@ -16,7 +16,7 @@ export class BaseActionComponent<T> implements OnInit, OnDestroy {
     return this.form.controls
   }
   public unsubs = new Subject();
-  public form!: FormGroup;
+  public form: FormGroup;
   dataSource!: T;
   query: any;
   redirectTo!: string;
