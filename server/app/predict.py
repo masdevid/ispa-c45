@@ -4,6 +4,7 @@ from flask import jsonify, request
 import numpy as np
 from c45 import C45
 from sklearn.model_selection import train_test_split
+import pickle
 
 from datetime import datetime
 
@@ -36,11 +37,10 @@ def predict():
         y = 1 if p.result else 0
         data.append(x)
         target.append(y)
-    clf = C45(attrNames=features)
+    clf = pickle.load(open('model.train', 'rb'))
 
-    X_train, X_test, y_train, y_test = train_test_split(np.array(data), target, test_size=0.5)
-    clf.fit(X_train, y_train)
-    C45(attrNames=features)
+    X_test,y_test = train_test_split(np.array(data), target, test_size=0.5)
+    
     acc = clf.score(X_test, y_test)
     predict_test = [[parseSuhu(suhu), 1 if is_batuk else 0, 1 if is_sesak else 0]]
 
@@ -71,7 +71,8 @@ def retrain():
 
     X_train, X_test, y_train, y_test = train_test_split(np.array(data), target, test_size=0.5)
     clf.fit(X_train, y_train)
-    C45(attrNames=features)
+    pickle.dump(clf, open('model.train', 'wb'))
+
     acc = clf.score(X_test, y_test)
     train_log = Train(None, f'{len(target)} training data', datetime.now(),  acc)
     Train.query.session.add(train_log)
@@ -99,7 +100,6 @@ def trend():
 
     X_train, X_test, y_train, y_test = train_test_split(np.array(data), target, test_size=0.5)
     clf.fit(X_train, y_train)
-    C45(attrNames=['year','month'])
     acc = clf.score(X_test, y_test)
     predict = clf.predict([[int(tahun),int(bulan)]])
     print(acc, predict)

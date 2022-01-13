@@ -15,7 +15,7 @@ import { BasePage } from 'src/app/shared/base-page';
   styleUrls: ['./training.component.scss']
 })
 export class TrainingComponent extends BasePage<Pasien> implements OnInit, AfterViewInit, OnDestroy {
-
+  isLoading = false;
   constructor(
     public service: PasienService, public router: Router, public activatedRoute: ActivatedRoute, public sb: MatSnackBar, public dialog: MatDialog, public helpers: HelpersService, private trainService: TrainService) {
     super(service, router, activatedRoute, sb, dialog, helpers)
@@ -42,13 +42,20 @@ export class TrainingComponent extends BasePage<Pasien> implements OnInit, After
     super.ngAfterViewInit()
   }
   train(){
+    this.isLoading = true;
     this.trainService.train().subscribe(() => {
       this.getTrains()
+      this.isLoading = false;
+    }, ()=>{
+      this.isLoading = false;
     })
   }
   getTrains(){
     this.trainService.getAll({limit:0, offset:0, sort:'-timestamp'}).subscribe((resp) => {
       this.train_logs = resp;
+      this.isLoading = false;
+    }, ()=> {
+      this.isLoading = false;
     })
   }
 }
